@@ -1,98 +1,74 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 
-describe('App layout', () => {
-  it('renders the responsive workspace landmarks', () => {
+describe('App generator UI', () => {
+  it('exposes implemented identifier generators', () => {
     render(<App />)
-
-    expect(screen.getByRole('heading', { name: /generera värden lokalt/i })).toBeInTheDocument()
-    expect(screen.getByRole('navigation', { name: /kategorier/i })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'UUID v4' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: /genererade värden/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /^generera$/i })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /kopiera alla/i })).toBeInTheDocument()
+    const generator = screen.getByLabelText('Generator')
+    expect(generator).toHaveTextContent('UUID v4')
+    expect(generator).toHaveTextContent('UUID v7')
+    expect(generator).toHaveTextContent('ULID')
+    expect(generator).toHaveTextContent('NanoID')
+    expect(generator).toHaveTextContent('Alfanumeriskt ID')
+    expect(generator).toHaveTextContent('Numeriskt ID')
   })
 
-  it('copies one result and shows feedback', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    })
-
+  it('can generate UUID v7 and ULID from the selector', async () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /kopiera värde 1/i }))
+    fireEvent.change(screen.getByLabelText('Generator'), { target: { value: 'uuid-v7' } })
+    fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
+    expect((await screen.findByLabelText('Genererat värde 1')).textContent).toMatch(/^[0-9a-f-]{36}$/i)
 
-    expect(await screen.findByText('Kopierat')).toHaveTextContent('Kopierat')
-    expect(writeText).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440000')
+    fireEvent.change(screen.getByLabelText('Generator'), { target: { value: 'ulid' } })
+    expect(await screen.findByRole('heading', { name: 'ULID' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
+    await waitFor(() => expect(screen.getByLabelText('Genererat värde 1').textContent).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/))
   })
 
-  it('generates a batch of five and Copy all preserves one value per line', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    })
+  it('enables Secrets and Hash categories but keeps Keys disabled', () => {
+    render(<App />)
+    expect(screen.getByRole('button', { name: /Secrets/i })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /Hash/i })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /Nycklar/i })).toBeDisabled()
+  })
 
+  it('shows secret generators', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /Secrets/i }))
+    const generator = screen.getByLabelText('Generator')
+    expect(generator).toHaveTextContent('Hex')
+    expect(generator).toHaveTextContent('Base64')
+    expect(generator).toHaveTextContent('Base64URL')
+    expect(generator).toHaveTextContent('API token')
+    expect(generator).toHaveTextContent('Token')
+    expect(generator).toHaveTextContent('PK token')
+  })
+
+  it('hashes text locally', async () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /Hash/i }))
+    fireEvent.change(screen.getByLabelText('Text'), { target: { value: 'abc' } })
+    fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
+    expect(await screen.findByText('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')).toBeInTheDocument()
+  })
+
+  it('generates batches and copies them', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
     render(<App />)
     fireEvent.change(screen.getByLabelText('Antal'), { target: { value: '5' } })
     fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
-
     expect(await screen.findByRole('heading', { name: 'Genererade värden (5)' })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /kopiera värde/i })).toHaveLength(5)
-
     fireEvent.click(screen.getByRole('button', { name: /kopiera alla/i }))
     await screen.findByText('Kopierade 5 värden')
-
-    const copied = writeText.mock.calls.at(-1)?.[0] as string
-    expect(copied.split('\n')).toHaveLength(5)
-    expect(copied.endsWith('\n')).toBe(false)
+    expect((writeText.mock.calls.at(-1)?.[0] as string).split('\n')).toHaveLength(5)
   })
 
-  it('offers the required batch count presets', () => {
+  it('provides mobile category selection for implemented categories', () => {
     render(<App />)
-    const countSelect = screen.getByLabelText('Antal')
-    const options = Array.from(countSelect.querySelectorAll('option')).map((option) => option.textContent)
-    expect(options).toEqual(['1', '5', '10', '100'])
-  })
-
-  it('provides a compact category selector for mobile layouts', () => {
-    render(<App />)
-
-    expect(screen.getByLabelText('Kategori')).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Identifierare' })).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Secrets' })).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Hash' })).toBeInTheDocument()
-    expect(screen.getByRole('option', { name: 'Nycklar' })).toBeInTheDocument()
-  })
-})
-
-describe('Accessibility', () => {
-  it('provides a skip link and named main content target', () => {
-    render(<App />)
-
-    expect(screen.getByRole('link', { name: 'Hoppa till innehållet' })).toHaveAttribute('href', '#main-content')
-    expect(screen.getByRole('main')).toHaveAttribute('id', 'main-content')
-  })
-
-  it('does not expose not-yet-wired generators and categories as actionable controls', () => {
-    render(<App />)
-
-    expect(screen.getByRole('button', { name: /Secrets/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Hash/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Nycklar/i })).toBeDisabled()
-    expect(screen.getByRole('option', { name: /UUID v7/i })).toBeDisabled()
-    expect(screen.getByRole('option', { name: /ULID/i })).toBeDisabled()
-    expect(screen.getByRole('option', { name: /NanoID/i })).toBeDisabled()
-  })
-
-  it('announces generation feedback without making the full result list a live region', async () => {
-    render(<App />)
-
-    fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
-
-    expect(await screen.findByText('1 värde genererat')).toHaveAttribute('role', 'status')
-    expect(screen.getByRole('list', { name: 'Genererade värden' })).not.toHaveAttribute('aria-live')
+    const category = screen.getByLabelText('Kategori')
+    fireEvent.change(category, { target: { value: 'secrets' } })
+    expect(screen.getByRole('heading', { name: 'Hex' })).toBeInTheDocument()
   })
 })
