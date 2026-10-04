@@ -7,8 +7,8 @@ import {
 } from './encodedRandom'
 
 describe('encoded random secret generators', () => {
-  it('generates hex with entropy metadata', () => {
-    const result = hexSecretGenerator.generate({ byteLength: 16 })
+  it('generates hex with entropy metadata', async () => {
+    const result = await hexSecretGenerator.generate({ byteLength: 16 })
 
     expect(result).toMatchObject({
       metadata: {
@@ -19,8 +19,8 @@ describe('encoded random secret generators', () => {
     })
   })
 
-  it('generates 48 random bytes as 64 Base64 characters', () => {
-    const result = base64SecretGenerator.generate({ byteLength: 48 })
+  it('generates 48 random bytes as 64 Base64 characters', async () => {
+    const result = await base64SecretGenerator.generate({ byteLength: 48 })
 
     expect(result).toMatchObject({
       metadata: {
@@ -32,8 +32,8 @@ describe('encoded random secret generators', () => {
     expect(result.value).toHaveLength(64)
   })
 
-  it('generates Base64URL without unsafe characters or padding', () => {
-    const result = base64UrlSecretGenerator.generate({ byteLength: 32 })
+  it('generates Base64URL without unsafe characters or padding', async () => {
+    const result = await base64UrlSecretGenerator.generate({ byteLength: 32 })
 
     expect(result.value).not.toMatch(/[+/=]/)
   })
