@@ -59,9 +59,12 @@ describe('random identifiers', () => {
   })
 
   it('exposes both variants through the shared generator contract', async () => {
-    await expect(
-      alphanumericIdGenerator.generate({ length: 4, prefix: 'id_', alphabet: 'AB' }),
-    ).resolves.toMatchObject({
+    const alphanumeric = await alphanumericIdGenerator.generate({
+      length: 4,
+      prefix: 'id_',
+      alphabet: 'AB',
+    })
+    expect(alphanumeric).toMatchObject({
       value: expect.stringMatching(/^id_[AB]{4}$/),
       metadata: {
         format: 'alphanumeric',
@@ -71,9 +74,8 @@ describe('random identifiers', () => {
       },
     })
 
-    await expect(
-      numericIdGenerator.generate({ length: 5, prefix: 'n_' }),
-    ).resolves.toMatchObject({
+    const numeric = await numericIdGenerator.generate({ length: 5, prefix: 'n_' })
+    expect(numeric).toMatchObject({
       value: expect.stringMatching(/^n_\d{5}$/),
       metadata: {
         format: 'numeric',
