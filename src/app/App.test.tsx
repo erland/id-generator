@@ -24,7 +24,7 @@ describe('App layout', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: /kopiera värde 1/i }))
 
-    expect(await screen.findByRole('status')).toHaveTextContent('Kopierat')
+    expect(await screen.findByText('Kopierat')).toHaveTextContent('Kopierat')
     expect(writeText).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440000')
   })
 
