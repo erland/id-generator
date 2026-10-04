@@ -1,0 +1,461 @@
+schema_version: 1
+project: id-generator
+mode: CREATE
+phase: implementation
+active_work:
+  selected_step: null
+  in_progress: null
+  state: ready
+completed:
+  planning:
+  - functional_specification
+  - risk_feasibility
+  - architecture
+  - development_plan
+  - planning_handoff
+  development:
+  - DEV-001
+  - DEV-002
+  - DEV-003
+  - DEV-004
+  - DEV-005
+  - DEV-006
+  - DEV-007
+  - DEV-008
+  - DEV-009
+  - DEV-010
+  - DEV-011
+  - DEV-012
+  - DEV-013
+  - DEV-014
+  - DEV-015
+  - DEV-016
+  - DEV-017
+  - DEV-018
+  - DEV-019
+  - DEV-020
+  - DEV-021
+  - DEV-022
+  - DEV-023
+blockers: []
+verification:
+  planning_handoff:
+    status: PASS
+    checks:
+    - required_planning_documents_present
+    - canonical_state_present
+    - selected_step_is_null
+    - in_progress_is_null
+    - zip_integrity
+  DEV-001:
+    status: passed_with_deferred
+    checks:
+    - package_json_valid: PASS
+    - required_project_files_present: PASS
+    - eslint_config_syntax: PASS
+    deferred:
+    - npm_install
+    - npm_run_lint
+    - npm_test
+    - npm_run_build
+    reason: npm registry is unavailable in the current execution environment and required
+      packages are not present in the local npm cache. No project failure was observed.
+  DEV-002:
+    status: passed_with_deferred
+    checks:
+    - vite_github_pages_base_path: PASS
+    - github_pages_workflow_present: PASS
+    - github_pages_permissions: PASS
+    - workflow_yaml_syntax: PASS
+    - no_absolute_assets_references: PASS
+    - workflow_does_not_require_missing_lockfile_for_cache: PASS
+    deferred:
+    - npm_install
+    - npm_run_build
+    - live_github_pages_deployment
+    reason: dependency-backed production build and live Pages deployment require network/GitHub
+      execution; source-level configuration checks passed.
+  DEV-003:
+    status: passed_with_deferred
+    checks:
+    - shared_generator_types_present: PASS
+    - required_categories_defined: PASS
+    - registry_register_get_list_generate_present: PASS
+    - test_generator_registration_and_invocation_covered: PASS
+    - duplicate_and_unknown_id_errors_covered: PASS
+    - typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Global TypeScript compilation passed. Vitest and the Vite production build
+      remain deferred because project dependencies are not installed in this execution
+      environment.
+  DEV-004:
+    status: passed_with_deferred
+    checks:
+    - crypto_random_bytes_present: PASS
+    - random_integer_uses_rejection_sampling: PASS
+    - random_characters_uses_unbiased_integer_sampling: PASS
+    - invalid_alphabet_tests_present: PASS
+    - no_math_random_usage: PASS
+    - isolated_crypto_typescript_compile: PASS
+    deferred:
+    - full_project_typescript_compile
+    - npm_test
+    - npm_run_build
+    reason: The cryptographic module compiles cleanly in isolation and source-level
+      checks passed. Full project compilation, Vitest, and Vite production build remain
+      deferred because project dependencies are not installed in this execution environment.
+  DEV-005:
+    status: passed_with_deferred
+    checks:
+    - uuid_v4_generator_present: PASS
+    - native_random_uuid_preferred: PASS
+    - cryptographic_fallback_present: PASS
+    - uuid_version_nibble_4: PASS
+    - uuid_variant_bits_rfc_compatible: PASS
+    - isolated_uuid_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: UUID v4 implementation and source-level verification passed. Full Vitest
+      and Vite production build remain deferred because project dependencies are not
+      installed in this execution environment.
+  DEV-006:
+    status: passed_with_deferred
+    checks:
+    - uuid_v7_generator_present: PASS
+    - uuid_version_nibble_7: PASS
+    - uuid_variant_bits_rfc_compatible: PASS
+    - unix_timestamp_milliseconds_encoded: PASS
+    - same_timestamp_values_are_distinct: PASS
+    - isolated_uuid_v7_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: UUID v7 implementation and source-level verification passed. Full Vitest
+      and Vite production build remain deferred because project dependencies are not
+      installed in this execution environment.
+  DEV-007:
+    status: passed_with_deferred
+    checks:
+    - ulid_generator_present: PASS
+    - ulid_length_26: PASS
+    - crockford_base32_alphabet: PASS
+    - unix_timestamp_milliseconds_encoded: PASS
+    - lexicographic_time_ordering: PASS
+    - cryptographic_randomness_80_bits: PASS
+    - isolated_ulid_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: ULID implementation and source-level verification passed. Full Vitest
+      and Vite production build remain deferred because project dependencies are not
+      installed in this execution environment.
+  DEV-008:
+    status: passed_with_deferred
+    checks:
+    - nano_id_generator_present: PASS
+    - default_length_21: PASS
+    - url_safe_default_alphabet: PASS
+    - custom_length_supported: PASS
+    - custom_alphabet_supported: PASS
+    - unbiased_sampling_via_random_characters: PASS
+    - isolated_nano_id_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: NanoID-like implementation and source-level verification passed. Full
+      Vitest and Vite production build remain deferred because project dependencies
+      are not installed in this execution environment.
+  DEV-010:
+    status: passed_with_deferred
+    checks:
+    - random_byte_generation_present: PASS
+    - presets_16_24_32_48_64_present: PASS
+    - entropy_bits_match_byte_length_times_eight: PASS
+    - default_32_bytes_256_bits: PASS
+    - encoding_kept_separate_for_DEV_011: PASS
+    - isolated_random_bytes_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Random byte generation and entropy metadata passed source-level and isolated
+      TypeScript verification. Full Vitest and Vite production build remain deferred
+      because project dependencies are not installed in this execution environment.
+  DEV-009:
+    status: passed_with_deferred
+    checks:
+    - alphanumeric_generator_present: PASS
+    - numeric_generator_present: PASS
+    - requested_random_length_respected: PASS
+    - prefix_kept_separate_from_random_part: PASS
+    - custom_alphabet_supported: PASS
+    - invalid_alphabet_validation_reused: PASS
+    - unbiased_sampling_via_random_characters: PASS
+    - isolated_random_identifier_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Alphanumeric and numeric identifier implementations and source-level verification
+      passed. Full Vitest and Vite production build remain deferred because project
+      dependencies are not installed in this execution environment.
+  DEV-011:
+    status: passed_with_deferred
+    checks:
+    - hex_encoding_present: PASS
+    - base64_encoding_present: PASS
+    - base64url_without_padding_present: PASS
+    - base64_48_bytes_is_64_characters: PASS
+    - encoding_round_trip_runtime_checks: PASS
+    - encoded_secret_generators_present: PASS
+    - entropy_metadata_preserved: PASS
+    - isolated_encoding_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Encoding, generator integration, TypeScript compilation and direct runtime
+      round-trip checks passed. Full Vitest and Vite production build remain deferred
+      because project dependencies are not installed in this execution environment.
+  DEV-012:
+    status: passed_with_deferred
+    checks:
+    - api_token_preset_present: PASS
+    - generic_token_preset_present: PASS
+    - pk_token_preset_present: PASS
+    - base64url_random_part: PASS
+    - default_32_bytes_256_bits: PASS
+    - configurable_byte_length: PASS
+    - no_persistence_added: PASS
+    - isolated_secret_token_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Secret/API token presets and TypeScript compilation passed. Full Vitest
+      and Vite production build remain deferred because project dependencies are not
+      installed in this execution environment.
+  DEV-013:
+    status: passed_with_deferred
+    checks:
+    - sha_256_text_hash_present: PASS
+    - sha_384_text_hash_present: PASS
+    - sha_512_text_hash_present: PASS
+    - utf8_text_encoding_via_text_encoder: PASS
+    - hex_output_present: PASS
+    - base64_output_present: PASS
+    - standard_test_vectors_present: PASS
+    - isolated_hash_typescript_compile: PASS
+    - direct_runtime_standard_vectors: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    reason: Text hashing compiles cleanly and direct Web Crypto runtime checks match
+      standard vectors. Full Vitest and Vite production build remain deferred because
+      project dependencies are not installed in this execution environment.
+  DEV-014:
+    status: passed_with_deferred
+    checks:
+    - local_file_hashing_present: PASS
+    - no_network_or_persistence_in_file_hash_path: PASS
+    - sha_256_known_checksum_runtime: PASS
+    - sha_384_known_checksum_runtime: PASS
+    - sha_512_known_checksum_runtime: PASS
+    - file_name_size_type_returned_for_ui: PASS
+    - isolated_file_hash_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - browser_file_picker_ui
+    reason: Local file hashing compiles cleanly and direct Web Crypto runtime checks
+      match known checksums. The function performs no network or persistence operations.
+      Full Vitest and Vite production build remain deferred because project dependencies
+      are not installed; UI integration belongs to the upcoming UI phase.
+  DEV-015:
+    status: passed_with_deferred
+    checks:
+    - desktop_category_navigation_present: PASS
+    - generator_panel_present: PASS
+    - result_panel_present: PASS
+    - mobile_compact_category_selector_present: PASS
+    - touch_targets_minimum_44px: PASS
+    - responsive_breakpoints_cover_375_768_1440: PASS
+    - horizontal_overflow_guards_present: PASS
+    - isolated_app_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - visual_browser_check_375px
+    - visual_browser_check_768px
+    - visual_browser_check_1440px
+    reason: Responsive desktop/mobile layout and source-level checks passed. Full
+      dependency-backed tests/build and visual browser verification remain deferred
+      to the user's final test environment.
+  DEV-016:
+    status: passed_with_deferred
+    checks:
+    - clipboard_api_path_present: PASS
+    - legacy_copy_fallback_present: PASS
+    - successful_copy_feedback_present: PASS
+    - understandable_copy_failure_feedback_present: PASS
+    - mobile_manual_text_selection_not_required: PASS
+    - isolated_clipboard_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - browser_clipboard_https_mobile
+    - browser_clipboard_https_desktop
+    reason: Clipboard integration and accessible feedback are implemented. Full dependency-backed
+      tests/build and real HTTPS clipboard behavior remain deferred to the user's
+      final test environment.
+  DEV-017:
+    status: passed_with_deferred
+    checks:
+      batch_presets_1_5_10_100: PASS
+      batch_generation_stable_order: PASS
+      copy_per_row_present: PASS
+      copy_all_lf_delimited_no_trailing_newline: PASS
+      mobile_100_values_scrollable_result_area: PASS
+      isolated_batch_typescript_compile: PASS
+      direct_runtime_100_value_check: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - visual_mobile_100_values
+    reason: Batch generation logic, Copy all formatting, responsive scroll containment,
+      TypeScript compilation and a direct 100-value runtime check passed. Dependency-backed
+      tests/build and visual mobile verification remain deferred to the user final
+      test environment.
+  DEV-018:
+    status: passed_with_deferred
+    checks:
+      system_preference_supported: PASS
+      manual_light_dark_system_override: PASS
+      theme_preference_only_local_persistence: PASS
+      system_theme_change_listener: PASS
+      dark_and_light_design_tokens: PASS
+      pre_render_theme_application: PASS
+      isolated_theme_typescript_compile: PASS
+      direct_theme_runtime_checks: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - visual_light_dark_mobile_desktop
+    reason: Theme resolution, persistence boundaries, TypeScript compilation and direct
+      runtime checks passed. Dependency-backed tests/build and visual theme verification
+      remain deferred to the user final test environment.
+  DEV-019:
+    status: passed_with_deferred
+    checks:
+      web_app_manifest_present: PASS
+      app_name_id_generator: PASS
+      standalone_display: PASS
+      theme_and_background_metadata: PASS
+      icons_192_512_maskable_present: PASS
+      apple_touch_icon_present: PASS
+      github_pages_relative_manifest_paths: PASS
+      manifest_json_validation: PASS
+      icon_dimensions_validation: PASS
+    deferred:
+    - npm_run_build
+    - desktop_browser_installability
+    - mobile_add_to_home_screen
+    reason: Manifest, icons, metadata, relative GitHub Pages paths and icon dimensions
+      passed static validation. Dependency-backed production build and real browser
+      installability remain deferred to the user final test environment.
+  DEV-020:
+    status: passed_with_deferred
+    checks:
+      service_worker_present: PASS
+      service_worker_registered_in_app_scope: PASS
+      current_build_assets_precached_from_built_html: PASS
+      network_first_with_offline_cache_fallback: PASS
+      same_origin_get_requests_only: PASS
+      old_cache_cleanup_present: PASS
+      skip_waiting_and_clients_claim: PASS
+      no_generated_data_persistence_or_separate_cache: PASS
+      service_worker_javascript_syntax: PASS
+      isolated_registration_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - browser_first_load_then_offline_reload
+    - browser_update_after_new_deployment
+    reason: Service worker registration, current-build app-shell precaching, stale-resistant
+      network-first runtime behavior and source-level safety checks passed. Dependency-backed
+      build/tests and real browser offline/update behavior remain deferred to the
+      user final test environment.
+  DEV-021:
+    status: passed_with_deferred
+    checks:
+    - 'generated_values_not_persisted: PASS'
+    - 'theme_is_only_local_storage_usage: PASS'
+    - 'no_session_storage_or_indexeddb: PASS'
+    - 'no_generated_values_in_url_or_history: PASS'
+    - 'no_generated_values_logged: PASS'
+    - 'no_analytics_or_third_party_scripts: PASS'
+    - 'no_generator_network_calls: PASS'
+    - 'service_worker_cache_limited_to_app_assets: PASS'
+    - 'query_urls_excluded_from_service_worker_cache: PASS'
+    - 'no_referrer_meta_policy: PASS'
+    - 'service_worker_syntax: PASS'
+    deferred:
+    - browser_devtools_storage_inspection
+    - browser_network_panel_verification
+    - npm_test
+    - npm_run_build
+    reason: Source-level security/integrity review passed and overbroad service-worker
+      runtime caching was remediated. Browser DevTools inspection plus full dependency-backed
+      tests/build remain deferred to the final user-run verification.
+  DEV-022:
+    status: passed_with_deferred
+    checks:
+    - keyboard_skip_link_present: PASS
+    - main_landmark_named_and_focus_target: PASS
+    - labels_and_accessible_names_present: PASS
+    - visible_focus_states_present: PASS
+    - touch_targets_minimum_44px: PASS
+    - semantic_result_list_present: PASS
+    - copy_feedback_polite_atomic_live_region: PASS
+    - generation_feedback_without_result_list_live_region: PASS
+    - unwired_controls_disabled: PASS
+    - checked_color_contrast_wcag_aa: PASS
+    - isolated_app_typescript_compile: PASS
+    deferred:
+    - npm_test
+    - npm_run_build
+    - browser_keyboard_only_flow
+    - voiceover_ios_ipados_macos
+    - browser_zoom_reflow_200_percent
+    reason: Accessibility source-level pass completed with keyboard landmarks, labels, focus states, semantic result structure, restrained screen-reader announcements, and corrected dark-theme contrast. Full dependency-backed tests/build and assistive-technology/browser verification remain deferred to the final user-run environment.
+
+  DEV-023:
+    status: passed_with_deferred
+    checks:
+    - chromium_process_launch: PASS
+    - chromium_version_144_detected: PASS
+    - css_grid_support_probe: PASS
+    - flexbox_support_probe: PASS
+    - focus_visible_support_probe: PASS
+    - overflow_wrap_anywhere_support_probe: PASS
+    - prefers_color_scheme_support_probe: PASS
+    - crypto_get_random_values_probe: PASS
+    - text_encoder_probe: PASS
+    - file_array_buffer_probe: PASS
+    - browser_compatibility_matrix_documented: PASS
+    deferred:
+    - built_app_chromium_https_flow
+    - safari_iphone_ipad
+    - safari_macos
+    - chrome_android
+    - firefox_desktop
+    - clipboard_secure_context_browser_test
+    - service_worker_offline_browser_test
+    - pwa_installability_browser_test
+    - npm_test
+    - npm_run_build
+    reason: Chromium 144 launched successfully and engine/CSS capability probes passed, but environment policy blocks localhost and file navigation with ERR_BLOCKED_BY_ADMINISTRATOR. Full application and target-browser execution is therefore deferred to the user's final test environment and documented in docs/browser-compatibility.md.
+
+execution:
+  next:
+    recommended: SPIKE-001
+    reason: Cross-browser verification is documented as far as the current environment allows. The planned Ed25519/OpenSSH spike remains unresolved and should be decided before release documentation and final release verification.

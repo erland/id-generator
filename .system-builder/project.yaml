@@ -1,0 +1,11 @@
+schema_version: 1
+project:
+  name: id-generator
+  mode: CREATE
+  description: Statisk PWA för lokal generering av identifierare, tokens och hashvärden.
+  deployment_profile: github-pages-static-pwa
+canonical_docs:
+  functional_specification: docs/functional-specification.md
+  risk_feasibility: docs/risk-feasibility.md
+  architecture: docs/architecture.md
+  development_plan: docs/development-plan.md

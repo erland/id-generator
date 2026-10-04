@@ -1,0 +1,11 @@
+schema_version: 1
+profile:
+  id: github-pages-static-pwa
+  hosting: GitHub Pages
+  application_type: static-pwa
+  backend: none
+  public: true
+  https_required: true
+  notes:
+    - Vite base path måste stödja project-site under /id-generator/.
+    - PWA/service-worker-scope måste fungera under samma base path.
