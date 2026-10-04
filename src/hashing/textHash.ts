@@ -42,7 +42,9 @@ export async function hashBytes(
     throw new Error('Web Crypto SubtleCrypto is not available in this environment')
   }
 
-  const digest = await globalThis.crypto.subtle.digest(algorithm, bytes)
+  const data = new Uint8Array(bytes.byteLength)
+  data.set(bytes)
+  const digest = await globalThis.crypto.subtle.digest(algorithm, data)
   return new Uint8Array(digest)
 }
 
