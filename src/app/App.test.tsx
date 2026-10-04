@@ -21,6 +21,7 @@ describe('App generator UI', () => {
     expect((await screen.findByLabelText('Genererat värde 1')).textContent).toMatch(/^[0-9a-f-]{36}$/i)
 
     fireEvent.change(screen.getByLabelText('Generator'), { target: { value: 'ulid' } })
+    expect(await screen.findByRole('heading', { name: 'ULID' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
     expect((await screen.findByLabelText('Genererat värde 1')).textContent).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
   })
