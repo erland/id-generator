@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { App } from './App'
 
@@ -23,7 +23,7 @@ describe('App generator UI', () => {
     fireEvent.change(screen.getByLabelText('Generator'), { target: { value: 'ulid' } })
     expect(await screen.findByRole('heading', { name: 'ULID' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /^generera$/i }))
-    expect((await screen.findByLabelText('Genererat värde 1')).textContent).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
+    await waitFor(() => expect(screen.getByLabelText('Genererat värde 1').textContent).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/))
   })
 
   it('enables Secrets and Hash categories but keeps Keys disabled', () => {
