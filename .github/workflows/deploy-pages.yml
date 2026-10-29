@@ -31,7 +31,14 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm run build:all
+
+      - name: Upload standalone HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: id-generator-single-html
+          path: dist-single/id-generator.html
+          if-no-files-found: error
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
